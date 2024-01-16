@@ -6,6 +6,10 @@ export default {
   ],
   theme: {
     extend: {},
+    colors:{
+      "primary": "#141414",
+      "bule" :"#3575E2"
+    }
   },
   plugins: [],
 }
