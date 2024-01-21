@@ -64,7 +64,7 @@ const Addnewpost = () => {
     return (
         <div className='mt-[100px] '>
             <div className='card card-compact bg-base-100 shadow-xl w-[60%] mx-auto'>
-                <h1 className='w-full bg-blue-600 text-white rounded py-3 mx-auto text-center font-bold'>Add New Post</h1>
+                <h1 className='w-full bg-blue-600 text-white rounded py-3 mx-auto text-center font-bold'>Add New Ms Word</h1>
                 <div className='mx-auto lg:w-full'>
                     <form className="card-body" >
                         <div className="form-control">
@@ -115,7 +115,7 @@ const Addnewpost = () => {
                         </div>
 
                         <div className="form-control mt-6">
-                            <input className="btn bg-blue-600 text-white hover:bg-blue-800 duration-300" type="submit" value="Add Post" />
+                            
                         </div>
                     </form>
 
