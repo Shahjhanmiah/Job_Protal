@@ -1,85 +1,129 @@
 
-import logo from '../assets/Tablet login-bro.png'
-import Swal from 'sweetalert2';
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
+ 
+
+const toolbarOptions = [
+    [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+    ['bold', 'italic', 'underline', 'strike'],
+    ['link'],       // toggled buttons
+    ['blockquote', 'code-block'],
+    ['link', 'image', 'video'],
+    [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+    [{ 'script': 'sub' }, { 'script': 'super' }],      // superscript/subscript
+    [{ 'indent': '-1' }, { 'indent': '+1' }],          // outdent/indent
+    [{ 'direction': 'rtl' }],                         // text direction
+    [{ 'size': ['small', false, 'large', 'huge'] }],  // custom dropdown
+    [{ 'color': [] }, { 'background': [] }],          // dropdown with defaults from theme
+    [{ 'font': [] }],
+    [{ 'align': [] }],
+    ['clean']                                         // remove formatting button
+];
 
 
-const Home = () => {
-
-
-    const handleSignUp = event => {
-        event.preventDefault();
-        const form = event.target;
-        const name = form.email.value
-        const email = form.email.value;
-        const password = form.password.value;
-        const text = form.text.value;
-        console.log(name, email, password,text);
-
-
-        Swal.fire({
-            title: 'Success!',
-            text: 'Create User as a Successfully',
-            icon: 'success',
-            confirmButtonText: 'Confirm'
-        })
+const module = {
+    toolbar: toolbarOptions
+}
+const quillStyle = {
+    height: '300px'
+}
 
 
 
-            .then(error => console.log(error))
-    }
+const Addnewpost = () => {
 
-    // create in google siging
+    
+
+
+  
+
+
+
+
+
+   
+
+   
+
+   
+
+
+
+
+
+
+   
+
+
+
+
+    // console.log({ title, value, imgUrl, category, tags })
 
 
 
     return (
-        <div>
+        <div className='mt-[100px] '>
+            <div className='card card-compact bg-base-100 shadow-xl w-[60%] mx-auto'>
+                <h1 className='w-full bg-blue-600 text-white rounded py-3 mx-auto text-center font-bold'>Add New Post</h1>
+                <div className='mx-auto lg:w-full'>
+                    <form className="card-body" >
+                        <div className="form-control">
+                            <label htmlFor='title' className="label" >
+                               
+                            </label>
 
-            <div className="hero w-full my-20">
-                <div className="hero-content grid gap-20 md:grid-cols-2 flex-col lg:flex-row">
-                    <div className="text-center lg:text-left">
-                        <img className='w-3/4' src={logo} alt="" />
-                    </div>
-                    <div className="card flex-shrink-0 w-full max-w-sm shadow-2xl bg-base-100 p-6 rounded border">
 
-                        <form onSubmit={handleSignUp} className="card-body">
-                            <div className="form-control">
-                                <label className="label">
-                                    Name
-                                </label>
-                                <input type="text" name='name' placeholder="Your Name" className="input input-bordered rounded border p-2 w-full" />
-                            </div>
-                            <br></br>
-                            <div className="form-control">
-                                <label className="label">
-                                    Eamil:
-                                </label>
-                                <input type="text" name='email' placeholder="email" className="input input-bordered rounded border p-2 w-full" required />
-                            </div>
-                            <br></br>
-                            <div className="form-control">
-                                <label className="label">
-                                    Password
-                                </label>
-                                <input type="password" name='password' placeholder="password" className="input input-bordered rounded border p-2 w-full" required />
+                        </div>
+                        <div className="form-control">
+                            <label htmlFor='desc' className="label">
+                               
+                            </label>
+                            <ReactQuill theme="snow"  modules={module} style={quillStyle} />
 
-                            </div>
-                            <br></br>
+
+
+                        </div>
+                        <div className="form-control mt-20">
+                            <label htmlFor='image' className="label">
+                               
+                            </label>
                             
-                            <div className="flex items-center">
-                                <input type="text" name='text' placeholder="Text area"  className="w-full border rounded-l p-5"  />
-                                <button type="submit" className="bg-blue-500 text-white rounded-r p-2">
-                                    Submit
-                                </button>
-                            </div>
-                        </form>
-                        
 
-                    </div>
+
+                        </div>
+                        <div className="form-control">
+                            <label htmlFor='category' className="label">
+                              
+                            </label>
+                
+
+                                
+                            
+
+                        </div>
+
+                        <div className="form-control">
+                            <label htmlFor='tags' className="label" >
+                                
+                            </label>
+
+                            <div className='flex justify-between items-center'>
+
+                                
+                            </div>
+                          
+                        </div>
+
+                        <div className="form-control mt-6">
+                            <input className="btn bg-blue-600 text-white hover:bg-blue-800 duration-300" type="submit" value="Add Post" />
+                        </div>
+                    </form>
+
                 </div>
+
             </div>
         </div>
-    );
-};
+    )
+}
 
-export default Home;
+export default Addnewpost
