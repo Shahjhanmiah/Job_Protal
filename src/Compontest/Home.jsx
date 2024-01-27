@@ -1,129 +1,142 @@
+import { useState, useEffect } from 'react';
+import axios from 'axios';
 
-import ReactQuill from 'react-quill';
-import 'react-quill/dist/quill.snow.css';
- 
+const API_URL = 'http://localhost:3001/tasks';
 
-const toolbarOptions = [
-    [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
-    ['bold', 'italic', 'underline', 'strike'],
-    ['link'],       // toggled buttons
-    ['blockquote', 'code-block'],
-    ['link', 'image', 'video'],
-    [{ 'list': 'ordered' }, { 'list': 'bullet' }],
-    [{ 'script': 'sub' }, { 'script': 'super' }],      // superscript/subscript
-    [{ 'indent': '-1' }, { 'indent': '+1' }],          // outdent/indent
-    [{ 'direction': 'rtl' }],                         // text direction
-    [{ 'size': ['small', false, 'large', 'huge'] }],  // custom dropdown
-    [{ 'color': [] }, { 'background': [] }],          // dropdown with defaults from theme
-    [{ 'font': [] }],
-    [{ 'align': [] }],
-    ['clean']                                         // remove formatting button
-];
+function Home() {
+  const [tasks, setTasks] = useState([]);
+  const [newTask, setNewTask] = useState({ title: '', description: '' });
+  const [editingTask, setEditingTask] = useState(null);
 
+  useEffect(() => {
+    axios.get(API_URL).then((response) => setTasks(response.data));
+  }, []);
 
-const module = {
-    toolbar: toolbarOptions
-}
-const quillStyle = {
-    height: '300px'
-}
+  const handleAddTask = async () => {
+    try {
+      const response = await axios.post(API_URL, newTask);
+      setTasks([...tasks, response.data]);
+      setNewTask({ title: '', description: '' });
+    } catch (error) {
+      console.error('Error adding task:', error);
+    }
+  };
 
+  const handleEditTask = async (id) => {
+    try {
+      const taskToEdit = tasks.find((task) => task._id === id);
+      const response = await axios.put(`${API_URL}/${id}`, {
+        ...taskToEdit,
+        title: newTask.title,
+        description: newTask.description,
+      });
+      setTasks(tasks.map((task) => (task._id === id ? response.data : task)));
+      setEditingTask(null);
+      setNewTask({ title: '', description: '' });
+    } catch (error) {
+      console.error('Error editing task:', error);
+    }
+  };
 
+  const handleDeleteTask = async (id) => {
+    try {
+      await axios.delete(`${API_URL}/${id}`);
+      setTasks(tasks.filter((task) => task._id !== id));
+    } catch (error) {
+      console.error('Error deleting task:', error);
+    }
+  };
 
-const Addnewpost = () => {
+  const handleToggleComplete = async (id) => {
+    try {
+      const taskToUpdate = tasks.find((task) => task._id === id);
+      const updatedTask = { ...taskToUpdate, completed: !taskToUpdate.completed };
 
-    
-
-
-  
-
-
-
-
-
-   
-
-   
-
-   
-
-
-
-
-
-
-   
-
-
-
-
-    // console.log({ title, value, imgUrl, category, tags })
-
-
-
-    return (
-        <div className='mt-[100px] '>
-            <div className='card card-compact bg-base-100 shadow-xl w-[60%] mx-auto'>
-                <h1 className='w-full bg-blue-600 text-white rounded py-3 mx-auto text-center font-bold'>Add New Ms Word</h1>
-                <div className='mx-auto lg:w-full'>
-                    <form className="card-body" >
-                        <div className="form-control">
-                            <label htmlFor='title' className="label" >
-                               
-                            </label>
+      const response = await axios.put(`${API_URL}/${id}`, updatedTask);
+      setTasks(tasks.map((task) => (task._id === id ? response.data : task)));
+    } catch (error) {
+      console.error('Error updating task:', error);
+    }
+  };
 
 
-                        </div>
-                        <div className="form-control">
-                            <label htmlFor='desc' className="label">
-                               
-                            </label>
-                            <ReactQuill theme="snow"  modules={module} style={quillStyle} />
-
-
-
-                        </div>
-                        <div className="form-control mt-20">
-                            <label htmlFor='image' className="label">
-                               
-                            </label>
-                            
-
-
-                        </div>
-                        <div className="form-control">
-                            <label htmlFor='category' className="label">
-                              
-                            </label>
-                
-
-                                
-                            
-
-                        </div>
-
-                        <div className="form-control">
-                            <label htmlFor='tags' className="label" >
-                                
-                            </label>
-
-                            <div className='flex justify-between items-center'>
-
-                                
-                            </div>
-                          
-                        </div>
-
-                        <div className="form-control mt-6">
-                            
-                        </div>
-                    </form>
-
-                </div>
-
-            </div>
+  return (
+    <div className="mx-auto  mx-20 justify-center items-center  bg-gray-100">
+      <div className="bg-white p-8 rounded shadow-md mb-4 mx-auto">
+        <h1 className="text-4xl font-bold mb-4">Task Manager</h1>
+        <div className="flex flex-col items-center gap-4">
+          <input
+            type="text"
+            placeholder="Task Title"
+            value={newTask.title}
+            onChange={(e) => setNewTask({ ...newTask, title: e.target.value })}
+            className="border-2 rounded px-3 py-2 focus:outline-none focus:border-blue-500 transition duration-300"
+          />
+          <input
+            type="text"
+            placeholder="Task Description"
+            value={newTask.description}
+            onChange={(e) => setNewTask({ ...newTask, description: e.target.value })}
+            className="border-2 rounded px-3 py-2 focus:outline-none focus:border-blue-500 transition duration-300"
+          />
+          {editingTask ? (
+            <button
+              onClick={() => handleEditTask(editingTask)}
+              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition duration-300 transform hover:scale-105"
+            >
+              Save Changes
+            </button>
+          ) : (
+            <button
+              onClick={handleAddTask}
+              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition duration-300 transform hover:scale-105"
+            >
+              Add Task
+            </button>
+          )}
         </div>
-    )
+      </div>
+
+      <ul className="list-none p-0">
+        {tasks.map((task) => (
+          <li
+            key={task._id}
+            className="bg-white p-4 rounded mb-2 flex items-center justify-between shadow-md"
+          >
+            <span
+              style={{ textDecoration: task.completed ? 'line-through' : 'none' }}
+              className="flex-grow"
+            >
+              {task.title} - {task.description}
+            </span>
+            <div className="flex gap-2">
+              <button
+                onClick={() => setEditingTask(task._id)}
+                className="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded transition duration-300 transform hover:scale-105"
+              >
+                Edit
+              </button>
+              <button
+                onClick={() => handleToggleComplete(task._id)}
+                className={`bg-${task.completed ? 'green' : 'red'}-500 hover:bg-${task.completed ? 'green' : 'red'
+                  }-700 text-white font-bold py-2 px-4 rounded transition duration-300 transform hover:scale-105`}
+              >
+                {task.completed ? 'Mark Incomplete' : 'Mark Complete'}
+              </button>
+              <button
+                onClick={() => handleDeleteTask(task._id)}
+                className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded transition duration-300 transform hover:scale-105"
+              >
+                Delete
+              </button>
+            </div>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+
+
 }
 
-export default Addnewpost
+export default Home;
